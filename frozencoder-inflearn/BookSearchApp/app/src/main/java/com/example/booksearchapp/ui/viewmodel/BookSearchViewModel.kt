@@ -5,11 +5,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.booksearchapp.data.model.Book
 import com.example.booksearchapp.data.model.SearchResponse
 import com.example.booksearchapp.data.repository.BookSearchRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class BookSearchViewModel(
     private val bookSearchRepository: BookSearchRepository,
@@ -21,7 +25,7 @@ class BookSearchViewModel(
     val searchResult: LiveData<SearchResponse> get() = _searchResult
 
     fun searchBooks(query: String) = viewModelScope.launch(Dispatchers.IO) {
-        val response = bookSearchRepository.searchBooks(query, "accuracy", 1, 15)
+        val response = bookSearchRepository.searchBooks(query, getSortMode(), 1, 15)
         if (response.isSuccessful) {
             response.body()?.let { body ->
                 _searchResult.postValue(body)
@@ -38,7 +42,9 @@ class BookSearchViewModel(
         bookSearchRepository.deleteBooks(book)
     }
 
-    val favoriteBooks: LiveData<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    // val favoriteBooks: Flow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+    val favoriteBooks: StateFlow<List<Book>> = bookSearchRepository.getFavoriteBooks()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), listOf())
 
     // SavedState
     var query = String()
@@ -53,5 +59,33 @@ class BookSearchViewModel(
 
     companion object {
         private const val SAVE_STATE_KEY = "query"
+    }
+
+    // DataStore
+    fun saveSortMode(value: String) = viewModelScope.launch(Dispatchers.IO) {
+        bookSearchRepository.saveSortMode(value)
+    }
+
+    suspend fun getSortMode() = withContext(Dispatchers.IO) {
+        bookSearchRepository.getSortMode().first()
+    }
+
+    // Paging
+    val favoritePagingBooks: StateFlow<PagingData<Book>> =
+        bookSearchRepository.getFavoritePagingBooks()
+            .cachedIn(viewModelScope)
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), PagingData.empty())
+
+    private val _searchPagingResult = MutableStateFlow<PagingData<Book>>(PagingData.empty())
+    val searchPagingResult: StateFlow<PagingData<Book>> = _searchPagingResult.asStateFlow()
+
+    fun searchBooksPaging(query: String) {
+        viewModelScope.launch {
+            bookSearchRepository.searchBooksPaging(query, getSortMode())
+                .cachedIn(viewModelScope)
+                .collect {
+                    _searchPagingResult.value = it
+                }
+        }
     }
 }

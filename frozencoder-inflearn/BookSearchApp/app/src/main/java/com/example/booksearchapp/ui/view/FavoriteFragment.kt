@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -12,8 +15,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.booksearchapp.databinding.FragmentFavoriteBinding
 import com.example.booksearchapp.ui.adapter.BookSearchAdapter
+import com.example.booksearchapp.ui.adapter.BookSearchPagingAdapter
 import com.example.booksearchapp.ui.viewmodel.BookSearchViewModel
+import com.example.booksearchapp.util.collectLatestStateFlow
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
@@ -21,7 +30,8 @@ class FavoriteFragment : Fragment() {
         get() = _binding!!
 
     private lateinit var bookSearchViewModel: BookSearchViewModel
-    private lateinit var bookSearchAdapter: BookSearchAdapter
+    // private lateinit var bookSearchAdapter: BookSearchAdapter
+    private lateinit var bookSearchAdapter: BookSearchPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -39,13 +49,36 @@ class FavoriteFragment : Fragment() {
         setupRecyclerView()
         setupTouchHelper(view)
 
-        bookSearchViewModel.favoriteBooks.observe(viewLifecycleOwner) {
+        /*bookSearchViewModel.favoriteBooks.observe(viewLifecycleOwner) {
             bookSearchAdapter.submitList(it)
+        }*/
+
+        /*lifecycleScope.launch {
+            bookSearchViewModel.favoriteBooks.collectLatest {
+                bookSearchAdapter.submitList(it)
+            }
+        }*/
+
+        /*viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                bookSearchViewModel.favoriteBooks.collectLatest {
+                    bookSearchAdapter.submitList(it)
+                }
+            }
+        }*/
+
+        /*collectLatestStateFlow(bookSearchViewModel.favoriteBooks) {
+            bookSearchAdapter.submitList(it)
+        }*/
+        collectLatestStateFlow(bookSearchViewModel.favoritePagingBooks) {
+            bookSearchAdapter.submitData(it)
         }
     }
 
     private fun setupRecyclerView() {
-        bookSearchAdapter = BookSearchAdapter()
+        // bookSearchAdapter = BookSearchAdapter()
+        bookSearchAdapter = BookSearchPagingAdapter()
+
         binding.rvFavoriteBooks.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -72,13 +105,25 @@ class FavoriteFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                val book = bookSearchAdapter.currentList[position]
+
+                /*val book = bookSearchAdapter.currentList[position]
                 bookSearchViewModel.deleteBook(book)
                 Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
                     setAction("Undo") {
                         bookSearchViewModel.saveBook(book)
                     }
-                }.show()
+                }.show()*/
+
+                val pagedBook = bookSearchAdapter.peek(position)
+                pagedBook?.let { book ->
+                    bookSearchViewModel.deleteBook(book)
+                    Snackbar.make(view, "Book has deleted", Snackbar.LENGTH_SHORT).apply {
+                        setAction("Undo") {
+                            bookSearchViewModel.saveBook(book)
+                        }
+                    }
+                }
+
             }
         }
         ItemTouchHelper(itemTouchHelperCallback).apply {

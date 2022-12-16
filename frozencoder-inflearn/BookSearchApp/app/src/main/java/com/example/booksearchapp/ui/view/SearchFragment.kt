@@ -12,8 +12,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.booksearchapp.databinding.FragmentSearchBinding
 import com.example.booksearchapp.ui.adapter.BookSearchAdapter
+import com.example.booksearchapp.ui.adapter.BookSearchPagingAdapter
 import com.example.booksearchapp.ui.viewmodel.BookSearchViewModel
 import com.example.booksearchapp.util.Constants.SEARCH_BOOKS_TIME_DELAY
+import com.example.booksearchapp.util.collectLatestStateFlow
 
 class SearchFragment : Fragment() {
     private var _binding: FragmentSearchBinding? = null
@@ -21,7 +23,8 @@ class SearchFragment : Fragment() {
         get() = _binding!!
 
     private lateinit var bookSearchViewModel: BookSearchViewModel
-    private lateinit var bookSearchAdapter: BookSearchAdapter
+    // private lateinit var bookSearchAdapter: BookSearchAdapter
+    private lateinit var bookSearchAdapter: BookSearchPagingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,9 +43,13 @@ class SearchFragment : Fragment() {
         setupRecyclerView()
         searchBooks()
 
-        bookSearchViewModel.searchResult.observe(viewLifecycleOwner) { response ->
+        /*bookSearchViewModel.searchResult.observe(viewLifecycleOwner) { response ->
             val books = response.documents
             bookSearchAdapter.submitList(books)
+        }*/
+
+        collectLatestStateFlow(bookSearchViewModel.searchPagingResult) {
+            bookSearchAdapter.submitData(it)
         }
     }
 
@@ -59,7 +66,8 @@ class SearchFragment : Fragment() {
                 text?.let {
                     val query = it.toString().trim()
                     if (query.isNotEmpty()) {
-                        bookSearchViewModel.searchBooks(query)
+                        // bookSearchViewModel.searchBooks(query)
+                        bookSearchViewModel.searchBooksPaging(query)
                         bookSearchViewModel.query = query
                     }
                 }
@@ -69,7 +77,9 @@ class SearchFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        bookSearchAdapter = BookSearchAdapter()
+        // bookSearchAdapter = BookSearchAdapter()
+        bookSearchAdapter = BookSearchPagingAdapter()
+
         binding.rvSearchResult.apply {
             setHasFixedSize(true)
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
