@@ -89,7 +89,7 @@ class BookSearchRepositoryImpl(
     }
 
     override fun searchBooksPaging(query: String, sort: String): Flow<PagingData<Book>> {
-        // Log.d("PagingLo", "BookSearchRepositoryImpl - searchBooksPaging - 검색을 시도했다.")
+        // Log.d("PagingLog", "BookSearchRepositoryImpl - searchBooksPaging - 검색을 시도했다.")
         val pagingSourceFactory = { BookSearchPagingSource(query, sort)}
 
         return Pager(

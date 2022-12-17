@@ -14,6 +14,10 @@ class BookSearchPagingSource(
     private val sort: String,
 ) : PagingSource<Int, Book>() {
 
+    init {
+        // Log.d("PagingLog", "BookSearchPagingSource - init - 검색을 시도했다.")
+    }
+
     override fun getRefreshKey(state: PagingState<Int, Book>): Int? {
         // Log.d("PagingLog", "BookSearchPagingSource - getRefreshKey - 검색을 시도했다.")
         return state.anchorPosition?.let { anchorPosition ->
@@ -23,7 +27,7 @@ class BookSearchPagingSource(
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Book> {
-        //Log.d("PagingLog", "BookSearchPagingSource - load - 검색을 시도했다.")
+        // Log.d("PagingLog", "BookSearchPagingSource - load - 검색을 시도했다.")
         // Log.d("PagingLog", "BookSearchPagingSource - load - STARTING_PAGE_INDEX: $STARTING_PAGE_INDEX")
         // 검색할때,
         // next로 넘어가는 pageNum은 1씩 증가.
