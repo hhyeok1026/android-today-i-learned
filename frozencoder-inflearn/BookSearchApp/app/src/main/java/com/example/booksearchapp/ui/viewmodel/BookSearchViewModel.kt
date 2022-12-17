@@ -1,5 +1,6 @@
 package com.example.booksearchapp.ui.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -81,6 +82,7 @@ class BookSearchViewModel(
 
     fun searchBooksPaging(query: String) {
         viewModelScope.launch {
+            // Log.d("PagingLog", "viewModel - searchBooksPaging - 검색을 시도했다.")
             bookSearchRepository.searchBooksPaging(query, getSortMode())
                 .cachedIn(viewModelScope)
                 .collect {

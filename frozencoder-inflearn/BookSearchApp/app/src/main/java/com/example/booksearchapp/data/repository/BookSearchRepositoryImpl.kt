@@ -1,5 +1,6 @@
 package com.example.booksearchapp.data.repository
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -88,13 +89,14 @@ class BookSearchRepositoryImpl(
     }
 
     override fun searchBooksPaging(query: String, sort: String): Flow<PagingData<Book>> {
+        // Log.d("PagingLo", "BookSearchRepositoryImpl - searchBooksPaging - 검색을 시도했다.")
         val pagingSourceFactory = { BookSearchPagingSource(query, sort)}
 
         return Pager(
             config = PagingConfig(
                 pageSize = PAGING_SIZE,
                 enablePlaceholders = false,
-                maxSize = PAGING_SIZE * 3
+                maxSize = PAGING_SIZE * 3 // 얘는 최소가 3배가 되야한다네 -> 아니면 에러나옴.
             ),
             pagingSourceFactory = pagingSourceFactory
         ).flow
