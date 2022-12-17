@@ -56,8 +56,8 @@ class BookFragment : Fragment() {
         binding.webview.onResume()
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 }
