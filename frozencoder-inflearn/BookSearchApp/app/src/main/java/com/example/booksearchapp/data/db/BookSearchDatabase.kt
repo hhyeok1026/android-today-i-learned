@@ -17,6 +17,7 @@ abstract class BookSearchDatabase : RoomDatabase() {
 
     abstract fun bookSearchDao(): BookSearchDao
 
+    /*
     companion object {
 
         @Volatile
@@ -34,4 +35,5 @@ abstract class BookSearchDatabase : RoomDatabase() {
                 INSTANCE ?: buildDatabase(context).also { INSTANCE = it }
             }
     }
+    */
 }

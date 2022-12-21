@@ -17,9 +17,11 @@ import com.example.booksearchapp.data.db.BookSearchDatabase
 import com.example.booksearchapp.data.repository.BookSearchRepositoryImpl
 import com.example.booksearchapp.databinding.ActivityMainBinding
 import com.example.booksearchapp.ui.viewmodel.BookSearchViewModel
-import com.example.booksearchapp.ui.viewmodel.BookSearchViewModelProviderFactory
+// import com.example.booksearchapp.ui.viewmodel.BookSearchViewModelProviderFactory
 import com.example.booksearchapp.util.Constants.DATASTORE_NAME
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private val binding: ActivityMainBinding by lazy {
@@ -30,8 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 
-    private val Context.dataStore by preferencesDataStore(DATASTORE_NAME)
-    private val workManager = WorkManager.getInstance(application)
+    // private val Context.dataStore by preferencesDataStore(DATASTORE_NAME)
+    // private val workManager = WorkManager.getInstance(application)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,10 +46,10 @@ class MainActivity : AppCompatActivity() {
 
         setupJetpackNavigation()
 
-        val database = BookSearchDatabase.getInstance(this)
-        val bookSearchRepository = BookSearchRepositoryImpl(database, dataStore)
-        val factory = BookSearchViewModelProviderFactory(bookSearchRepository, workManager,this)
-        bookSearchViewModel = ViewModelProvider(this, factory)[BookSearchViewModel::class.java]
+        // val database = BookSearchDatabase.getInstance(this)
+        // val bookSearchRepository = BookSearchRepositoryImpl(database, dataStore)
+        // val factory = BookSearchViewModelProviderFactory(bookSearchRepository, workManager,this)
+        // bookSearchViewModel = ViewModelProvider(this, factory)[BookSearchViewModel::class.java]
     }
 
     private fun setupJetpackNavigation() {
