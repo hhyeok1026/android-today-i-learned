@@ -16,7 +16,7 @@ import com.example.booksearchapp.R
 import com.example.booksearchapp.data.db.BookSearchDatabase
 import com.example.booksearchapp.data.repository.BookSearchRepositoryImpl
 import com.example.booksearchapp.databinding.ActivityMainBinding
-import com.example.booksearchapp.ui.viewmodel.BookSearchViewModel
+// import com.example.booksearchapp.ui.viewmodel.BookSearchViewModel
 // import com.example.booksearchapp.ui.viewmodel.BookSearchViewModelProviderFactory
 import com.example.booksearchapp.util.Constants.DATASTORE_NAME
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-    lateinit var bookSearchViewModel: BookSearchViewModel
+    //  lateinit var bookSearchViewModel: BookSearchViewModel
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
 

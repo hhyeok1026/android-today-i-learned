@@ -25,6 +25,7 @@ import kotlinx.coroutines.withContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+/*
 @HiltViewModel
 class BookSearchViewModel @Inject constructor(
     private val bookSearchRepository: BookSearchRepository,
@@ -133,4 +134,4 @@ class BookSearchViewModel @Inject constructor(
     fun getWorkStatus(): LiveData<MutableList<WorkInfo>> =
         workManager.getWorkInfosForUniqueWorkLiveData(WORKER_KEY)
 
-}
+}*/
