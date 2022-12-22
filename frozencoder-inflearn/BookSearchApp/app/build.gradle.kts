@@ -42,6 +42,11 @@ android {
     kapt {
         correctErrorTypes = true
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -52,8 +57,22 @@ dependencies {
     implementation(Dependencies.CONSTRAINT_LAYOUT)
 
     testImplementation(Testing.JUNIT4)
+    testImplementation("androidx.test.ext:truth:1.5.0")
+    testImplementation("androidx.test:runner:1.5.1")
+    // testImplementation("org.robolectric:robolectric:4.8.1")
+    testImplementation("org.robolectric:robolectric:4.9.1")
+    testImplementation("androidx.test:core:1.5.0")
+    testImplementation("androidx.test.ext:junit:1.1.4")
+
     androidTestImplementation(Testing.ANDROID_JUNIT)
     androidTestImplementation(Testing.ESPRESSO_CORE)
+    // testImplementation("junit:junit:4.13.2")
+    // androidTestImplementation("androidx.test.ext:junit:1.1.4")
+    // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation("androidx.test:core:1.5.0")
+    androidTestImplementation("androidx.test.ext:truth:1.5.0")
+    androidTestImplementation("androidx.test:runner:1.5.1")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.2")
 
     // Retrofit
     implementation(Dependencies.RETROFIT)
