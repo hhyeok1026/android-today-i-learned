@@ -47,6 +47,7 @@ android {
         unitTests {
             isIncludeAndroidResources = true
         }
+        animationsDisabled = true
     }
 }
 
@@ -56,6 +57,10 @@ dependencies {
     implementation(Dependencies.APP_COMPAT)
     implementation(Dependencies.MATERIAL)
     implementation(Dependencies.CONSTRAINT_LAYOUT)
+
+    // testImplementation("junit:junit:4.13.2")
+    // androidTestImplementation("androidx.test.ext:junit:1.1.4")
+    // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
 
     testImplementation(Testing.JUNIT4)
     testImplementation("androidx.test.ext:truth:1.5.0")
@@ -68,9 +73,8 @@ dependencies {
 
     androidTestImplementation(Testing.ANDROID_JUNIT)
     androidTestImplementation(Testing.ESPRESSO_CORE)
-    // testImplementation("junit:junit:4.13.2")
-    // androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    // androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.5.0")
+    androidTestImplementation("org.hamcrest:hamcrest:2.2")
     androidTestImplementation("androidx.test:core:1.5.0")
     androidTestImplementation("androidx.test.ext:truth:1.5.0")
     androidTestImplementation("androidx.test:runner:1.5.1")
